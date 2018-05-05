@@ -42,31 +42,40 @@ public class CookThread extends Thread
 
     public boolean allFoodFinished()
     {
-     return this.foodToBeCooked.isEmpty();
+        return this.foodToBeCooked.isEmpty();
     }
 
 
-    public List<Food> chefMikeCooking()
+    public void chefMikeCooking()
     {
         if(!allFoodFinished())
         {
             broadcastChefReady();
             getFirstFood();
             broadcastChefStart();
+            waitingForFoodFinishedCooking();
+            broadcastChefFinishedCurrent();
+            this.foodChefMikeFinishedCooking.add(this.current);
+            this.foodToBeCooked.remove(0);
         }
-
-
-        this.foodChefMikeFinishedCooking.add(this.current);
-        return this.foodChefMikeFinishedCooking;
-
+        else
+            broadcastChefFinishedEverything();
     }
 
 
-    public Thread waitingForFoodFinishedCooking()
+    public void waitingForFoodFinishedCooking()
     {
         try {
             Thread.sleep(1000*(this.current.getCookTime()));
-        } catch (InterruptedException ex){}
+        } catch (InterruptedException ex)
+            {
+                System.out.println("There was a problem making the thread sleep for the cook duration!");
+            }
+    }
+
+    public List<Food> completedListOfFood()
+    {
+        return this.foodChefMikeFinishedCooking;
     }
 
 

@@ -1,15 +1,17 @@
 import java.util.List;
 
-public class CookThread extends Thread
+public class CookThread implements Runnable
 {
     private List<Food> foodToBeCooked;
     private Food current;
     private List<Food> foodChefMikeFinishedCooking;
-
+    //private Thread cooker;
 
     public CookThread(List<Food> foodToBeCooked)
     {
         this.foodToBeCooked = foodToBeCooked;
+       // this.cooker = cooker;
+        //this.cooker.start();
     }
 
     public void getFirstFood()
@@ -45,8 +47,8 @@ public class CookThread extends Thread
         return this.foodToBeCooked.isEmpty();
     }
 
-
-    public void chefMikeCooking()
+    @Override
+    public void run()
     {
         if(!allFoodFinished())
         {

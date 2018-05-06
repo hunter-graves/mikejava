@@ -1,22 +1,25 @@
+import java.util.ArrayList;
 import java.util.List;
 
 public class CookThread implements Runnable
 {
-    private List<Food> foodToBeCooked;
+    private List<Food> foodToBeCooked = new ArrayList<>();
     private Food current;
-    private List<Food> foodChefMikeFinishedCooking;
+    private List<Food> foodChefMikeFinishedCooking = new ArrayList<>();
+    private int next = 0;
     //private Thread cooker;
 
     public CookThread(List<Food> foodToBeCooked)
     {
         this.foodToBeCooked = foodToBeCooked;
-       // this.cooker = cooker;
+        //foodChefMikeFinishedCooking.size(this.foodToBeCooked.size())
+       // this//.cooker = cooker;
         //this.cooker.start();
     }
 
-    public void getFirstFood()
+    public void getFood(int next)
     {
-        this.current = this.foodToBeCooked.get(0);
+        this.current = this.foodToBeCooked.get(next);
     }
 
 
@@ -50,15 +53,19 @@ public class CookThread implements Runnable
     @Override
     public void run()
     {
+
         if(!allFoodFinished())
         {
             broadcastChefReady();
-            getFirstFood();
+            getFood(this.next);
             broadcastChefStart();
             waitingForFoodFinishedCooking();
             broadcastChefFinishedCurrent();
             this.foodChefMikeFinishedCooking.add(this.current);
-            this.foodToBeCooked.remove(0);
+            this.foodToBeCooked.remove(this.next);
+            next++;
+            run();
+
         }
         else
             broadcastChefFinishedEverything();
@@ -73,6 +80,7 @@ public class CookThread implements Runnable
             {
                 System.out.println("There was a problem making the thread sleep for the cook duration!");
             }
+
     }
 
     public List<Food> completedListOfFood()
